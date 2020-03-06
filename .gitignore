@@ -3,3 +3,6 @@ target
 *.iml
 .mvn
 logs
+.md
+.cmd
+mvnw
