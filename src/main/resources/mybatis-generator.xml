@@ -22,12 +22,12 @@
 			<property name="forceBigDecimals" value="false"/>
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="com.fobcentury.utils.blog.pojo.po"
+		<javaModelGenerator targetPackage="com.org.byBlog.pojo.po"
 		                    targetProject="src/main/java"/>
 
 		<sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
-		<javaClientGenerator targetPackage="com.fobcentury.utils.blog.dao"
+		<javaClientGenerator targetPackage="com.org.byBlog.dao"
 		                     targetProject="src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true"/>
 		</javaClientGenerator>
@@ -44,8 +44,8 @@
 <!--		       enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">-->
 <!--			<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--		</table>-->
-		<table schema="" tableName="project_status"
-		       mapperName="ProjectStatusDAO" domainObjectName="ProjectStatusPO"
+		<table schema="" tableName="public_user"
+		       mapperName="PublicUserDAO" domainObjectName="PublicUserPO"
 		       enableCountByExample="false" enableSelectByExample="false"
 		       enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>

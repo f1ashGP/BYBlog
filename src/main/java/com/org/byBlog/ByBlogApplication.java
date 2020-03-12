@@ -10,7 +10,7 @@ import org.springframework.web.WebApplicationInitializer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@MapperScan("com.fobcentury.utils.byBlog.dao")
+@MapperScan("com.org.byBlog.dao")
 @EnableSwagger2
 @EnableScheduling
 public class ByBlogApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
