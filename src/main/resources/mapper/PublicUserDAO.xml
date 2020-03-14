@@ -21,8 +21,14 @@
   <select id="getAdminByAccount" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
-    FROM admin
-    WHERE account = #{account}
+    FROM public_user
+    WHERE username = #{account}
+  </select>
+  <select id="getUserByInfo" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM public_user
+    WHERE username = #{account} AND nickname = #{nickname}
   </select>
   <!-- liyi end -->
 

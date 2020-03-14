@@ -7,11 +7,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.WebApplicationInitializer;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @MapperScan("com.org.byBlog.dao")
-@EnableSwagger2
 @EnableScheduling
 public class ByBlogApplication extends SpringBootServletInitializer implements WebApplicationInitializer {
 

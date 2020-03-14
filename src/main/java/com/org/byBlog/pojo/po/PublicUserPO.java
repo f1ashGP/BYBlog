@@ -1,8 +1,9 @@
 package com.org.byBlog.pojo.po;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PublicUserPO {
+public class PublicUserPO  implements Serializable {
     private Long id;
 
     private String username;

@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class ShiroConfig {
     public SecurityManager securityManager(CacheManager cacheManager, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(sessionManager);
-        securityManager.setRealms(Arrays.asList(authRealm()));
+        securityManager.setRealm(authRealm());
         securityManager.setCacheManager(cacheManager);
         return securityManager;
     }
@@ -51,6 +50,7 @@ public class ShiroConfig {
         map.put("/logout", "logout");
         // 用户相关
         map.put("/user/login", "anon");
+        map.put("/user/register", "anon");
         map.put("/user/loginTimeout", "anon");
         // Swagger相关
         map.put("/swagger*", "anon");
@@ -60,7 +60,8 @@ public class ShiroConfig {
         map.put("/csrf/**", "anon");
         map.put("/configuration*", "anon");
         // 用户登陆后试用接口
-        map.put("/user/testRequest", "roleOrFilter[test]");
+        map.put("/user/getLoginInfo", "roleOrFilter[normal]");
+        map.put("/**","authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         //登录，此处改为返回未登录的接口
         shiroFilterFactoryBean.setLoginUrl("/user/loginTimeout");
@@ -70,10 +71,15 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/error");
         //添加过滤器
         Map<String, Filter> filterMap = new HashMap<>();
-        CustomRolesAuthorizationFilter customRolesAuthorizationFilter = new CustomRolesAuthorizationFilter();
-        filterMap.put("roleOrFilter", customRolesAuthorizationFilter);
+        filterMap.put("roleOrFilter", customRolesAuthorizationFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public CustomRolesAuthorizationFilter customRolesAuthorizationFilter(){
+        CustomRolesAuthorizationFilter customRolesAuthorizationFilter = new CustomRolesAuthorizationFilter();
+        return customRolesAuthorizationFilter;
     }
 
     //加入注解的使用，不加入这个注解不生效
@@ -94,12 +100,15 @@ public class ShiroConfig {
         return new EnterpriseCacheSessionDAO();
     }
 
+    /**
+     * 管理session
+     * @return
+     */
     @Bean
-    public SessionManager sessionManager(SessionDAO sessionDAO) {
-        DefaultWebSessionManager manager = new DefaultWebSessionManager();
-        manager.setSessionDAO(sessionDAO);
-        manager.setGlobalSessionTimeout(3600000);
-        manager.setSessionValidationInterval(3600000);
-        return manager;
+    public DefaultWebSessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        // 去掉shiro登录时url里的JSESSIONID
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        return sessionManager;
     }
 }

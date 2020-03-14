@@ -14,10 +14,12 @@ public class CustomRolesAuthorizationFilter extends AuthorizationFilter {
 		Subject subject = getSubject(request, response);
 		String[] rolesArray = (String[]) mappedValue;
 
+		// 没有权限访问
 		if (rolesArray == null || rolesArray.length == 0) {
 			return true;
 		}
 		for (int i = 0; i < rolesArray.length; i++) {
+			// 若当前用户是rolesArray中的任何一个，则有权限访问
 			if (subject.hasRole(rolesArray[i])) {
 				return true;
 			}

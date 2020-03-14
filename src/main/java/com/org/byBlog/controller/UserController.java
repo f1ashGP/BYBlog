@@ -28,6 +28,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @ApiOperation(value = "用户注册")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
+                    @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
+                    @ApiImplicitParam(name = "nickname", value = "昵称", required = true, dataType = "String", paramType = "query", defaultValue = "F1ash")
+            }
+    )
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Result register(@ApiIgnore @Validated({UserGroup.Register.class}) UserDTO userDTO,
+                           @ApiIgnore Errors errors) {
+        if (errors.hasErrors()) {
+            return new Result(errors);
+        }
+
+        Result result = userService.register(userDTO);
+        return result;
+    }
+
     @ApiOperation(value = "用户登录")
     @ApiImplicitParams(
             {
@@ -65,9 +85,10 @@ public class UserController {
     }
 
     @ApiOperation(value = "测试")
-    @RequestMapping(value = "/testRequest", method = {RequestMethod.GET})
-    public Result test() {
-        return new Result(1, "test");
+    @RequestMapping(value = "/getLoginInfo", method = {RequestMethod.GET})
+    public Result getLoginInfo() {
+        Result loginInfo = userService.getLoginInfo(1L);
+        return new Result(1, "test", loginInfo);
     }
 
 }
