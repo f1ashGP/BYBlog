@@ -63,11 +63,11 @@ public class UserController {
         }
 
         Result result = userService.login(userDTO);
+        PublicUserPO data = (PublicUserPO) result.getData();
         if (result.getCode() == 0) {
-            PublicUserPO data = (PublicUserPO) result.getData();
             request.getSession().setAttribute("uid", data.getId());
+            result.setData(data.getId());
         }
-        result.setData(null);
         return result;
     }
 
@@ -84,11 +84,12 @@ public class UserController {
         return new Result(0, "退出成功");
     }
 
-    @ApiOperation(value = "测试")
+    @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/getLoginInfo", method = {RequestMethod.GET})
-    public Result getLoginInfo() {
-        Result loginInfo = userService.getLoginInfo(1L);
-        return new Result(1, "test", loginInfo);
+    public Result getLoginInfo(@ApiIgnore HttpServletRequest request) {
+        Long uid = (Long) request.getSession().getAttribute("uid");
+        Result result = userService.getLoginInfo(uid);
+        return result;
     }
 
 }

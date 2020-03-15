@@ -44,7 +44,7 @@ public class UserService {
         user.setFreeze(false);
         user.setCreateTime(new Date());
         int insertSelective = publicUserDAO.insertSelective(user);
-        return new Result(insertSelective > 0 ? 0 : 1, insertSelective > 0 ? "添加成功" : "添加失败");
+        return new Result(insertSelective > 0 ? 0 : 1, insertSelective > 0 ? "注册成功" : "注册失败");
     }
 
     public Result login(UserDTO userDTO) {
