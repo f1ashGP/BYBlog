@@ -2,12 +2,18 @@ package com.org.byBlog.pojo.po;
 
 import java.util.Date;
 
-public class RoleAccessPO {
+public class MenuListPO {
     private Integer id;
 
     private String name;
 
     private String path;
+
+    private Integer parent;
+
+    private String icon;
+
+    private Boolean status;
 
     private String role;
 
@@ -35,6 +41,30 @@ public class RoleAccessPO {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Integer getParent() {
+        return parent;
+    }
+
+    public void setParent(Integer parent) {
+        this.parent = parent;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public String getRole() {

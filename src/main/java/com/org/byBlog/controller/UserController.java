@@ -1,6 +1,7 @@
 package com.org.byBlog.controller;
 
 import com.org.byBlog.pojo.dto.UserDTO;
+import com.org.byBlog.pojo.vo.UserVO;
 import com.org.byBlog.service.UserService;
 import com.org.byBlog.utils.Result;
 import com.org.byBlog.validator.group.UserGroup;
@@ -86,7 +87,7 @@ public class UserController {
 
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/getLoginInfo", method = {RequestMethod.GET})
-    public Result getLoginInfo(@ApiIgnore HttpServletRequest request) {
+    public Result<UserVO> getLoginInfo(@ApiIgnore HttpServletRequest request) {
         String account = (String) request.getSession().getAttribute("account");
         Result result = userService.getLoginInfo(account);
         return result;

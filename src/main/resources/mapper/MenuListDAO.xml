@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.byBlog.dao.MenuListDAO">
+  <resultMap id="BaseResultMap" type="com.org.byBlog.pojo.po.MenuListPO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="parent" jdbcType="INTEGER" property="parent" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, path, parent, icon, status, role, create_time
+  </sql>
+  <sql id="Pagination">
+    <if test="offset != null and count != null">
+      LIMIT #{offset}, #{count}
+    </if>
+  </sql>
+  <sql id="OrderBy">
+    <if test="order != null and sort != null">
+      ORDER BY ${order} ${sort}
+    </if>
+  </sql>
+
+  <!-- liyi start -->
+  <sql id="Menu_List_Where">
+    <where>
+      <if test="role != null">
+        role = #{role}
+      </if>
+      <if test="parentId != null">
+        AND parent = #{parentId}
+      </if>
+    </where>
+  </sql>
+  <select id="getMenuList" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM menu_list
+    <include refid="Menu_List_Where" />
+    <include refid="Pagination" />
+  </select>
+  <select id="getMenuByUserList" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM menu_list
+    <include refid="Menu_List_Where" />
+  </select>
+  <select id="getMenuTotalCount" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM menu_list <include refid="Menu_List_Where" />
+  </select>
+  <!-- liyi end -->
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from menu_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from menu_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.org.byBlog.pojo.po.MenuListPO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into menu_list (name, path, parent, 
+      icon, status, role, create_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{parent,jdbcType=INTEGER}, 
+      #{icon,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{role,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.org.byBlog.pojo.po.MenuListPO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into menu_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="parent != null">
+        parent,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.org.byBlog.pojo.po.MenuListPO">
+    update menu_list
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null">
+        parent = #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.org.byBlog.pojo.po.MenuListPO">
+    update menu_list
+    set name = #{name,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      parent = #{parent,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      role = #{role,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -13,7 +13,7 @@ public class BaseDTO {
 
     private Integer page = 1;
 
-    private Integer count = 10;
+    private Integer count = 1;
 
     private Integer offset = (page - 1) * count;
 

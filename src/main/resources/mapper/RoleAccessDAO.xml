@@ -5,12 +5,11 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="path" jdbcType="VARCHAR" property="path" />
-    <result column="router" jdbcType="VARCHAR" property="router" />
     <result column="role" jdbcType="VARCHAR" property="role" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, path, router, role, create_time
+    id, name, path, role, create_time
   </sql>
 
   <!-- liyi start -->
@@ -33,10 +32,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into role_access (name, path, router, 
-      role, create_time)
-    values (#{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{router,jdbcType=VARCHAR}, 
-      #{role,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+    insert into role_access (name, path, role, 
+      create_time)
+    values (#{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.org.byBlog.pojo.po.RoleAccessPO">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -49,9 +48,6 @@
       </if>
       <if test="path != null">
         path,
-      </if>
-      <if test="router != null">
-        router,
       </if>
       <if test="role != null">
         role,
@@ -66,9 +62,6 @@
       </if>
       <if test="path != null">
         #{path,jdbcType=VARCHAR},
-      </if>
-      <if test="router != null">
-        #{router,jdbcType=VARCHAR},
       </if>
       <if test="role != null">
         #{role,jdbcType=VARCHAR},
@@ -87,9 +80,6 @@
       <if test="path != null">
         path = #{path,jdbcType=VARCHAR},
       </if>
-      <if test="router != null">
-        router = #{router,jdbcType=VARCHAR},
-      </if>
       <if test="role != null">
         role = #{role,jdbcType=VARCHAR},
       </if>
@@ -103,7 +93,6 @@
     update role_access
     set name = #{name,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},
-      router = #{router,jdbcType=VARCHAR},
       role = #{role,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

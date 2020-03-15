@@ -71,13 +71,14 @@ public class UserService {
         }
     }
 
-    public Result getLoginInfo(String account) {
+    public Result<UserVO> getLoginInfo(String account) {
         PublicUserPO user = publicUserDAO.getUserByAccount(account);
         if (user == null) {
             return new Result(1, "账号不存在");
         }
         UserVO userVO = new UserVO();
         userVO.setNickname(user.getNickname());
-        return new Result(0, "查询成功", userVO);
+        userVO.setRole(user.getRole());
+        return new Result<UserVO>(0, "查询成功", userVO);
     }
 }

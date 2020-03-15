@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserDTO {
+public class UserDTO extends BaseDTO{
     private Long id;
 
     @NotNull(groups = {UserGroup.Register.class, UserGroup.Login.class}, message = "账号不能为空")
