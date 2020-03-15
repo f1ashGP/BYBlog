@@ -18,7 +18,7 @@
   </sql>
 
   <!-- liyi start -->
-  <select id="getAdminByAccount" resultMap="BaseResultMap">
+  <select id="getUserByAccount" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     FROM public_user

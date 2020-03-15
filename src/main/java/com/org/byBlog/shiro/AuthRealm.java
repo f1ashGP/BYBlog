@@ -9,6 +9,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+
 public class AuthRealm extends AuthorizingRealm {
 
 	@Autowired
@@ -22,7 +24,11 @@ public class AuthRealm extends AuthorizingRealm {
 		//获取用户输入的token
 		UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
 		String account = usernamePasswordToken.getUsername();
-		PublicUserPO publicUserPO = this.publicUserDAO.getAdminByAccount(account);
+		PublicUserPO publicUserPO = this.publicUserDAO.getUserByAccount(account);
+		PublicUserPO needUpdateUser = new PublicUserPO();
+		needUpdateUser.setId(publicUserPO.getId());
+		needUpdateUser.setLastLoginTime(new Date());
+		this.publicUserDAO.updateByPrimaryKeySelective(needUpdateUser);
 		//放入shiro.调用CredentialsMatcher检验密码
 		return new SimpleAuthenticationInfo(publicUserPO, publicUserPO.getPassword(), this.getClass().getName());
 	}

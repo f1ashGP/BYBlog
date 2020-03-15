@@ -44,8 +44,8 @@
 <!--		       enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">-->
 <!--			<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--		</table>-->
-		<table schema="" tableName="public_user"
-		       mapperName="PublicUserDAO" domainObjectName="PublicUserPO"
+		<table schema="" tableName="role_access"
+		       mapperName="RoleAccessDAO" domainObjectName="RoleAccessPO"
 		       enableCountByExample="false" enableSelectByExample="false"
 		       enableDeleteByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>

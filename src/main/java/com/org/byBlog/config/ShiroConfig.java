@@ -1,7 +1,11 @@
 package com.org.byBlog.config;
 
+import com.org.byBlog.dao.RoleAccessDAO;
 import com.org.byBlog.filter.CustomRolesAuthorizationFilter;
+import com.org.byBlog.filter.JWTFilter;
+import com.org.byBlog.pojo.po.RoleAccessPO;
 import com.org.byBlog.shiro.AuthRealm;
+import com.org.byBlog.shiro.JWTRealm;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -12,16 +16,18 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
 public class ShiroConfig {
+
+    @Autowired
+    private RoleAccessDAO roleAccessDAO;
 
     //将自己的验证方式加入容器
     @Bean
@@ -30,12 +36,18 @@ public class ShiroConfig {
         return authRealm;
     }
 
+    //JWT
+    public JWTRealm jwtRealm() {
+        JWTRealm jwtRealm = new JWTRealm();
+        return jwtRealm;
+    }
+
     //权限管理，配置主要是Realm的管理认证
     @Bean
     public SecurityManager securityManager(CacheManager cacheManager, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(sessionManager);
-        securityManager.setRealm(authRealm());
+        securityManager.setRealms(Arrays.asList(authRealm(), jwtRealm()));
         securityManager.setCacheManager(cacheManager);
         return securityManager;
     }
@@ -59,9 +71,13 @@ public class ShiroConfig {
         map.put("/v2/**", "anon");
         map.put("/csrf/**", "anon");
         map.put("/configuration*", "anon");
-        // 用户登陆后试用接口
-        map.put("/user/getLoginInfo", "roleOrFilter[normal]");
-        map.put("/**","authc");
+
+        // 获取用户权限
+        List<RoleAccessPO> roleAccessList = roleAccessDAO.getRoleAccessList();
+        for (RoleAccessPO roleAccess : roleAccessList) {
+            map.put(roleAccess.getPath(), "roleOrFilter[" + roleAccess.getRole() + "]");
+        }
+        map.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         //登录，此处改为返回未登录的接口
         shiroFilterFactoryBean.setLoginUrl("/user/loginTimeout");
@@ -72,12 +88,14 @@ public class ShiroConfig {
         //添加过滤器
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("roleOrFilter", customRolesAuthorizationFilter());
+        JWTFilter jwtFilter = new JWTFilter();
+        filterMap.put("jwtFilter", jwtFilter);
         shiroFilterFactoryBean.setFilters(filterMap);
         return shiroFilterFactoryBean;
     }
 
     @Bean
-    public CustomRolesAuthorizationFilter customRolesAuthorizationFilter(){
+    public CustomRolesAuthorizationFilter customRolesAuthorizationFilter() {
         CustomRolesAuthorizationFilter customRolesAuthorizationFilter = new CustomRolesAuthorizationFilter();
         return customRolesAuthorizationFilter;
     }
@@ -102,6 +120,7 @@ public class ShiroConfig {
 
     /**
      * 管理session
+     *
      * @return
      */
     @Bean

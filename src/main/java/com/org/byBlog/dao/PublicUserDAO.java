@@ -18,7 +18,7 @@ public interface PublicUserDAO {
 
     int updateByPrimaryKey(PublicUserPO record);
 
-    PublicUserPO getAdminByAccount(String account);
+    PublicUserPO getUserByAccount(String account);
 
     PublicUserPO getUserByInfo(UserDTO userDTO);
 }

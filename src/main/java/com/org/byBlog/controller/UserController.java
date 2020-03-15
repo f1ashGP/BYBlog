@@ -1,7 +1,6 @@
 package com.org.byBlog.controller;
 
 import com.org.byBlog.pojo.dto.UserDTO;
-import com.org.byBlog.pojo.po.PublicUserPO;
 import com.org.byBlog.service.UserService;
 import com.org.byBlog.utils.Result;
 import com.org.byBlog.validator.group.UserGroup;
@@ -27,7 +26,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
 
     @ApiOperation(value = "用户注册")
     @ApiImplicitParams(
@@ -63,10 +61,11 @@ public class UserController {
         }
 
         Result result = userService.login(userDTO);
-        PublicUserPO data = (PublicUserPO) result.getData();
+        String token = (String) result.getData();
         if (result.getCode() == 0) {
-            request.getSession().setAttribute("uid", data.getId());
-            result.setData(data.getId());
+            request.getSession().setAttribute("account", userDTO.getAccount());
+            request.getSession().setAttribute("token", token);
+            result.setData(token);
         }
         return result;
     }
@@ -80,6 +79,7 @@ public class UserController {
     @ApiOperation(value = "退出登录")
     @RequestMapping(value = "/logout", method = {RequestMethod.GET})
     public Result logout(@ApiIgnore HttpServletRequest request) {
+        request.getSession().removeAttribute("token");
         SecurityUtils.getSubject().logout();
         return new Result(0, "退出成功");
     }
@@ -87,8 +87,8 @@ public class UserController {
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "/getLoginInfo", method = {RequestMethod.GET})
     public Result getLoginInfo(@ApiIgnore HttpServletRequest request) {
-        Long uid = (Long) request.getSession().getAttribute("uid");
-        Result result = userService.getLoginInfo(uid);
+        String account = (String) request.getSession().getAttribute("account");
+        Result result = userService.getLoginInfo(account);
         return result;
     }
 

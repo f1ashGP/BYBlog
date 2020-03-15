@@ -5,12 +5,15 @@ import com.org.byBlog.enums.Role;
 import com.org.byBlog.pojo.dto.UserDTO;
 import com.org.byBlog.pojo.po.PublicUserPO;
 import com.org.byBlog.pojo.vo.UserVO;
+import com.org.byBlog.utils.JWTUtil;
 import com.org.byBlog.utils.Result;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +27,15 @@ public class UserService {
     @Resource
     private PublicUserDAO publicUserDAO;
 
+    @Autowired
+    private Environment environment;
+
     @Transactional(rollbackFor = Exception.class)
     public Result register(UserDTO userDTO) {
         // 验证账号和昵称是否存在
         PublicUserPO userIsExist = publicUserDAO.getUserByInfo(userDTO);
         if (Objects.nonNull(userIsExist)) {
-            return new Result(1,"账号或昵称已经存在");
+            return new Result(1, "账号或昵称已经存在");
         }
 
         // 加密以后的密码
@@ -51,19 +57,22 @@ public class UserService {
         String password = "%by_blog_" + userDTO.getPassword();
         String encryptedPassword = DigestUtils.md5Hex(password);
 
+        // 生成一个token
+        String token = JWTUtil.sign(userDTO.getAccount(), environment.getProperty("jwt.secret"));
+
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userDTO.getAccount(), encryptedPassword);
         try {
             subject.login(usernamePasswordToken);
-            PublicUserPO userByAccount = publicUserDAO.getAdminByAccount(userDTO.getAccount());
-            return new Result(0, "登录成功", userByAccount);
+            publicUserDAO.getUserByAccount(userDTO.getAccount());
+            return new Result(0, "登录成功", token);
         } catch (AuthenticationException e) {
             return new Result(1, "账号或密码错误");
         }
     }
 
-    public Result getLoginInfo(Long uid) {
-        PublicUserPO user = publicUserDAO.selectByPrimaryKey(uid);
+    public Result getLoginInfo(String account) {
+        PublicUserPO user = publicUserDAO.getUserByAccount(account);
         if (user == null) {
             return new Result(1, "账号不存在");
         }
