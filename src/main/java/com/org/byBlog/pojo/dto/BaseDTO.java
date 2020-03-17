@@ -13,13 +13,23 @@ public class BaseDTO {
 
     private Integer page = 1;
 
-    private Integer count = 1;
+    private Integer count = 10;
 
     private Integer offset = (page - 1) * count;
 
     private String order;
 
     private String sort;
+
+    private Boolean isPagination = true;
+
+    public Boolean getPagination() {
+        return isPagination;
+    }
+
+    public void setPagination(Boolean pagination) {
+        isPagination = pagination;
+    }
 
     public Integer getUid() {
         return uid;

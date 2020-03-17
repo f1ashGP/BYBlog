@@ -15,7 +15,7 @@
     id, name, path, parent, icon, status, role, create_time
   </sql>
   <sql id="Pagination">
-    <if test="offset != null and count != null">
+    <if test="offset != null and count != null and isPagination">
       LIMIT #{offset}, #{count}
     </if>
   </sql>
@@ -34,6 +34,12 @@
       <if test="parentId != null">
         AND parent = #{parentId}
       </if>
+      <if test="status != null">
+        AND status = #{status}
+      </if>
+      <if test="name != null">
+        AND name LIKE "%"#{name}"%"
+      </if>
     </where>
   </sql>
   <select id="getMenuList" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
@@ -41,7 +47,11 @@
     <include refid="Base_Column_List" />
     FROM menu_list
     <include refid="Menu_List_Where" />
+    ORDER BY create_time DESC
     <include refid="Pagination" />
+  </select>
+  <select id="getParentMenuList" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
+    SELECT name,id FROM menu_list <include refid="Menu_List_Where" />
   </select>
   <select id="getMenuByUserList" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
     SELECT
@@ -51,6 +61,26 @@
   </select>
   <select id="getMenuTotalCount" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultType="java.lang.Integer">
     SELECT COUNT(*) FROM menu_list <include refid="Menu_List_Where" />
+  </select>
+  <update id="updateParentMenu" parameterType="com.org.byBlog.pojo.dto.MenuDTO">
+    UPDATE menu_list SET status = #{status} WHERE parent = #{parentId}
+  </update>
+  <select id="checkMenuIsExists" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM menu_list
+    <where>
+      <if test="mode == 'name'">
+        name = #{name}
+      </if>
+      <if test="mode == 'path'">
+        path = #{path}
+      </if>
+    </where>
+  </select>
+  <select id="getMenuByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM menu_list WHERE name = #{name}
+  </select>
+  <select id="checkIsParentMenu" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM menu_list WHERE parent = #{id}
   </select>
   <!-- liyi end -->
 

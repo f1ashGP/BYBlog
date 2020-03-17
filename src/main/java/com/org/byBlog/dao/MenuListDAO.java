@@ -2,6 +2,7 @@ package com.org.byBlog.dao;
 
 import com.org.byBlog.pojo.dto.MenuDTO;
 import com.org.byBlog.pojo.po.MenuListPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,5 +23,15 @@ public interface MenuListDAO {
 
     List<MenuListPO> getMenuByUserList(MenuDTO menuDTO);
 
+    List<MenuListPO> getParentMenuList(MenuDTO menuDTO);
+
     Integer getMenuTotalCount(MenuDTO menuDTO);
+
+    Integer updateParentMenu(MenuDTO menuDTO);
+
+    Integer checkMenuIsExists(MenuDTO menuDTO);
+
+    MenuListPO getMenuByName(@Param("name") String name);
+
+    Integer checkIsParentMenu(@Param("id") Integer id);
 }
