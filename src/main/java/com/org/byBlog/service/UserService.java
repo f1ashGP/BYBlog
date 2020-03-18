@@ -53,7 +53,7 @@ public class UserService {
         return new Result(insertSelective > 0 ? 0 : 1, insertSelective > 0 ? "注册成功" : "注册失败");
     }
 
-    public Result login(UserDTO userDTO) {
+    public Result<UserVO> login(UserDTO userDTO) {
         String password = "%by_blog_" + userDTO.getPassword();
         String encryptedPassword = DigestUtils.md5Hex(password);
 
@@ -64,8 +64,11 @@ public class UserService {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userDTO.getAccount(), encryptedPassword);
         try {
             subject.login(usernamePasswordToken);
-            publicUserDAO.getUserByAccount(userDTO.getAccount());
-            return new Result(0, "登录成功", token);
+            PublicUserPO user = publicUserDAO.getUserByAccount(userDTO.getAccount());
+            UserVO userVO = new UserVO();
+            userVO.setToken(token);
+            userVO.setRole(user.getRole());
+            return new Result(0, "登录成功", userVO);
         } catch (AuthenticationException e) {
             return new Result(1, "账号或密码错误");
         }

@@ -38,6 +38,9 @@ public class MenuVO {
     @ApiModelProperty("父级")
     private String parent;
 
+    @ApiModelProperty("父级id")
+    private Integer parentId;
+
     @ApiModelProperty("状态")
     private Boolean status;
 
@@ -57,6 +60,7 @@ public class MenuVO {
         if (menuListPO.getParent() > MenuService.PARENT){
             MenuListPO menu = menuListDAO.selectByPrimaryKey(menuListPO.getParent());
             menuVO.setParent(menu.getName());
+            menuVO.setParentId(menu.getId());
             menuVO.setMenuIsParent(false);
         }
 

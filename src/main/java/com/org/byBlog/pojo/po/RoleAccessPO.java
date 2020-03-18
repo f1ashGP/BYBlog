@@ -11,6 +11,8 @@ public class RoleAccessPO {
 
     private String role;
 
+    private Boolean status;
+
     private Date createTime;
 
     public Integer getId() {
@@ -43,6 +45,14 @@ public class RoleAccessPO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {

@@ -123,7 +123,7 @@ public class MenuService {
         }
         if (OperateMode.UPDATE.getMode().equals(mode)) {
             Integer childMenuCount = menuListDAO.checkIsParentMenu(menuDTO.getId());
-            if (childMenuCount > 0) {
+            if (childMenuCount > 0 && menuDTO.getStatus()) {
                 return new Result(1,"无法成为子级侧边栏，该侧边栏下存在子级侧边栏");
             }
             if (menuDTO.getParentId().equals(menuDTO.getId())) {

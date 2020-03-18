@@ -66,7 +66,10 @@ public class MenuController {
     @ApiImplicitParams(
             {
                     @ApiImplicitParam(name = "page", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
-                    @ApiImplicitParam(name = "count", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1")
+                    @ApiImplicitParam(name = "count", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
+                    @ApiImplicitParam(name = "name", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "侧边栏管理"),
+                    @ApiImplicitParam(name = "role", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "admin"),
+                    @ApiImplicitParam(name = "status", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "false")
             }
     )
     @RequestMapping(value = "/getAllMenuList", method = RequestMethod.GET)

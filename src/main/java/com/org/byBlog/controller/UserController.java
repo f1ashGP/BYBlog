@@ -55,18 +55,18 @@ public class UserController {
             }
     )
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Result login(@ApiIgnore HttpServletRequest request, @ApiIgnore @Validated({UserGroup.Login.class}) UserDTO userDTO,
+    public Result<UserVO> login(@ApiIgnore HttpServletRequest request, @ApiIgnore @Validated({UserGroup.Login.class}) UserDTO userDTO,
                         @ApiIgnore Errors errors) {
         if (errors.hasErrors()) {
             return new Result(errors);
         }
 
         Result result = userService.login(userDTO);
-        String token = (String) result.getData();
+        UserVO userVO = (UserVO) result.getData();
         if (result.getCode() == 0) {
             request.getSession().setAttribute("account", userDTO.getAccount());
-            request.getSession().setAttribute("token", token);
-            result.setData(token);
+            request.getSession().setAttribute("token", userVO.getToken());
+            result.setData(userVO);
         }
         return result;
     }

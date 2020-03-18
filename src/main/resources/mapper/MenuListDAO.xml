@@ -77,7 +77,7 @@
     </where>
   </select>
   <select id="getMenuByName" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/> FROM menu_list WHERE name = #{name}
+    SELECT <include refid="Base_Column_List" /> FROM menu_list WHERE name = #{name}
   </select>
   <select id="checkIsParentMenu" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     SELECT COUNT(*) FROM menu_list WHERE parent = #{id}

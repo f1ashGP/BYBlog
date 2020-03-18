@@ -19,10 +19,6 @@ public interface MenuListDAO {
 
     int updateByPrimaryKey(MenuListPO record);
 
-    List<MenuListPO> getMenuList(MenuDTO menuDTO);
-
-    List<MenuListPO> getMenuByUserList(MenuDTO menuDTO);
-
     List<MenuListPO> getParentMenuList(MenuDTO menuDTO);
 
     Integer getMenuTotalCount(MenuDTO menuDTO);
@@ -34,4 +30,8 @@ public interface MenuListDAO {
     MenuListPO getMenuByName(@Param("name") String name);
 
     Integer checkIsParentMenu(@Param("id") Integer id);
+
+    List<MenuListPO> getMenuList(MenuDTO menuDTO);
+
+    List<MenuListPO> getMenuByUserList(MenuDTO menuDTO);
 }

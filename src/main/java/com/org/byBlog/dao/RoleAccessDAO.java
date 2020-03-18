@@ -1,5 +1,6 @@
 package com.org.byBlog.dao;
 
+import com.org.byBlog.pojo.dto.RoleDTO;
 import com.org.byBlog.pojo.po.RoleAccessPO;
 
 import java.util.List;
@@ -18,4 +19,8 @@ public interface RoleAccessDAO {
     int updateByPrimaryKey(RoleAccessPO record);
 
     List<RoleAccessPO> getRoleAccessList();
+
+    List<RoleAccessPO> getRoleList(RoleDTO roleDTO);
+
+    Integer getRoleTotalCount(RoleDTO roleDTO);
 }

@@ -13,4 +13,7 @@ public class UserVO extends BaseVO {
 
     @ApiModelProperty("权限")
     private String role;
+
+    @ApiModelProperty("令牌")
+    private String token;
 }
