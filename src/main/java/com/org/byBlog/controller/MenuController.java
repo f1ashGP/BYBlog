@@ -87,7 +87,7 @@ public class MenuController {
                     @ApiImplicitParam(name = "icon", value = "图标", required = false, dataType = "String", paramType = "query", defaultValue = "el-icon-setting"),
                     @ApiImplicitParam(name = "parentId", value = "父级列表", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
                     @ApiImplicitParam(name = "status", value = "状态 true = 关闭，false = 未关闭", required = true, dataType = "String", paramType = "query", defaultValue = "false"),
-                    @ApiImplicitParam(name = "mode", value = "update = 修改 delete = 删除 operateStatus = 修改状态", required = true, dataType = "String", paramType = "query", defaultValue = "false")
+                    @ApiImplicitParam(name = "mode", value = "update = 修改 delete = 删除 operateStatus = 修改状态", required = true, dataType = "String", paramType = "query", defaultValue = "update")
             }
     )
     @RequestMapping(value = "/operateMenu", method = RequestMethod.POST)

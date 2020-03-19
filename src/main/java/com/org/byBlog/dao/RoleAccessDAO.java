@@ -23,4 +23,6 @@ public interface RoleAccessDAO {
     List<RoleAccessPO> getRoleList(RoleDTO roleDTO);
 
     Integer getRoleTotalCount(RoleDTO roleDTO);
+
+    RoleAccessPO checkMenuIsExists(RoleDTO roleDTO);
 }

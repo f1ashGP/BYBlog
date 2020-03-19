@@ -25,7 +25,7 @@ public interface MenuListDAO {
 
     Integer updateParentMenu(MenuDTO menuDTO);
 
-    Integer checkMenuIsExists(MenuDTO menuDTO);
+    MenuListPO checkMenuIsExists(MenuDTO menuDTO);
 
     MenuListPO getMenuByName(@Param("name") String name);
 

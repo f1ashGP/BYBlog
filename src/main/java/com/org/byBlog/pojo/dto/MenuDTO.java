@@ -24,6 +24,4 @@ public class MenuDTO extends BaseDTO {
     private String path;
 
     private String icon;
-
-    private String mode;
 }

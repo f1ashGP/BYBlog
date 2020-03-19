@@ -22,6 +22,12 @@ public class RoleVO extends BaseVO {
     @ApiModelProperty("路径")
     private String path;
 
+    @ApiModelProperty("权限")
+    private String roleName;
+
+    @ApiModelProperty("状态")
+    private Boolean status;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("创建时间")
     private Date createTime;
@@ -29,6 +35,7 @@ public class RoleVO extends BaseVO {
     public static RoleVO fromPO(RoleAccessPO roleAccessPO) {
         RoleVO roleVO = new RoleVO();
         BeanUtils.copyProperties(roleAccessPO, roleVO);
+        roleVO.setRoleName(roleAccessPO.getRole());
 
         return roleVO;
     }

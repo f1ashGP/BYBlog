@@ -65,8 +65,8 @@
   <update id="updateParentMenu" parameterType="com.org.byBlog.pojo.dto.MenuDTO">
     UPDATE menu_list SET status = #{status} WHERE parent = #{parentId}
   </update>
-  <select id="checkMenuIsExists" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultType="java.lang.Integer">
-    SELECT COUNT(*) FROM menu_list
+  <select id="checkMenuIsExists" parameterType="com.org.byBlog.pojo.dto.MenuDTO" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM menu_list
     <where>
       <if test="mode == 'name'">
         name = #{name}
@@ -75,6 +75,7 @@
         path = #{path}
       </if>
     </where>
+    LIMIT 1,1
   </select>
   <select id="getMenuByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> FROM menu_list WHERE name = #{name}

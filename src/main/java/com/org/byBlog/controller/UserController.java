@@ -1,6 +1,8 @@
 package com.org.byBlog.controller;
 
 import com.org.byBlog.pojo.dto.UserDTO;
+import com.org.byBlog.pojo.vo.ListVO;
+import com.org.byBlog.pojo.vo.RoleVO;
 import com.org.byBlog.pojo.vo.UserVO;
 import com.org.byBlog.service.UserService;
 import com.org.byBlog.utils.Result;
@@ -93,4 +95,31 @@ public class UserController {
         return result;
     }
 
+    @ApiOperation(value = "获取所有菜单列表")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "page", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
+                    @ApiImplicitParam(name = "count", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
+                    @ApiImplicitParam(name = "name", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "侧边栏列表"),
+                    @ApiImplicitParam(name = "status", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "false")
+            }
+    )
+    @RequestMapping(value = "/getUserList", method = RequestMethod.GET)
+    public Result<ListVO<RoleVO>> getUserList(@ApiIgnore UserDTO userDTO) {
+        Result result = userService.getUserList(userDTO);
+        return result;
+    }
+
+    @ApiOperation(value = "冻结或取消冻结某个用户")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "id", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "1"),
+                    @ApiImplicitParam(name = "status", value = "", required = false, dataType = "String", paramType = "query", defaultValue = "false")
+            }
+    )
+    @RequestMapping(value = "/operateUser", method = RequestMethod.POST)
+    public Result operateUser(@ApiIgnore UserDTO userDTO) {
+        Result result = userService.operateUser(userDTO);
+        return result;
+    }
 }

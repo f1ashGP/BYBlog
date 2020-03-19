@@ -4,6 +4,7 @@ import com.org.byBlog.dao.PublicUserDAO;
 import com.org.byBlog.enums.Role;
 import com.org.byBlog.pojo.dto.UserDTO;
 import com.org.byBlog.pojo.po.PublicUserPO;
+import com.org.byBlog.pojo.vo.ListVO;
 import com.org.byBlog.pojo.vo.UserVO;
 import com.org.byBlog.utils.JWTUtil;
 import com.org.byBlog.utils.Result;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -83,5 +86,38 @@ public class UserService {
         userVO.setNickname(user.getNickname());
         userVO.setRole(user.getRole());
         return new Result<UserVO>(0, "查询成功", userVO);
+    }
+
+    public Result getUserList(UserDTO userDTO) {
+        Integer totalCount = publicUserDAO.getUserTotalCount(userDTO);
+        if (totalCount == 0) {
+            return new Result(1, "暂无数据");
+        }
+
+        List<PublicUserPO> userList = publicUserDAO.getUserList(userDTO);
+        List<UserVO> userVOList = userList.stream().map(
+                publicUserPO -> UserVO.fromPO(publicUserPO)
+        ).collect(Collectors.toList());
+
+        ListVO listVO = new ListVO();
+        listVO.setList(userVOList);
+        listVO.setTotal(totalCount);
+
+        Result result = new Result(0, "获取成功");
+        result.setData(listVO);
+        return result;
+    }
+
+    public Result operateUser(UserDTO userDTO) {
+        PublicUserPO user = publicUserDAO.selectByPrimaryKey(userDTO.getId());
+        if (Objects.isNull(user)) {
+            return new Result(1, "用户不存在");
+        }
+
+        PublicUserPO publicUserPO = new PublicUserPO();
+        publicUserPO.setId(userDTO.getId());
+        publicUserPO.setFreeze(userDTO.getStatus());
+        int keySelective = publicUserDAO.updateByPrimaryKeySelective(publicUserPO);
+        return new Result(keySelective > 0 ? 0 : 1, keySelective > 0 ? "修改成功" : "修改失败");
     }
 }

@@ -96,6 +96,11 @@ public class MenuService {
 
     @Transactional(rollbackFor = Exception.class)
     public Result operateMenu(MenuDTO menuDTO) {
+        MenuListPO menuListPO = menuListDAO.selectByPrimaryKey(menuDTO.getId());
+        if (Objects.isNull(menuListPO)) {
+            return new Result(1, "信息不存在");
+        }
+
         String mode = menuDTO.getMode();
         if (OperateMode.DELETE.getMode().equals(mode)) {
             menuDTO.setParentId(menuDTO.getId());
@@ -122,12 +127,16 @@ public class MenuService {
             return new Result<>(selective > 0 ? 0 : 1, selective > 0 ? "修改成功" : "修改失败");
         }
         if (OperateMode.UPDATE.getMode().equals(mode)) {
+            Result result = validateData(menuDTO);
+            if (result.getCode() != 0) {
+                return result;
+            }
             Integer childMenuCount = menuListDAO.checkIsParentMenu(menuDTO.getId());
             if (childMenuCount > 0 && menuDTO.getStatus()) {
-                return new Result(1,"无法成为子级侧边栏，该侧边栏下存在子级侧边栏");
+                return new Result(1, "无法成为子级侧边栏，该侧边栏下存在子级侧边栏");
             }
             if (menuDTO.getParentId().equals(menuDTO.getId())) {
-                return new Result(1,"父级侧边栏不允许为自己");
+                return new Result(1, "父级侧边栏不允许为自己");
             }
             BeanUtils.copyProperties(menuDTO, menuPO);
             menuPO.setParent(menuDTO.getParentId());
@@ -139,15 +148,10 @@ public class MenuService {
 
     @Transactional(rollbackFor = Exception.class)
     public Result addNewMenu(MenuDTO menuDTO) {
-        menuDTO.setMode("name");
-        Integer checkMenuNameIsExists = menuListDAO.checkMenuIsExists(menuDTO);
-        if (checkMenuNameIsExists > 0) {
-            return new Result(1, "菜单名称已存在");
-        }
-        menuDTO.setMode("path");
-        Integer checkMenuPathIsExists = menuListDAO.checkMenuIsExists(menuDTO);
-        if (StringUtils.isNotEmpty(menuDTO.getPath()) && checkMenuPathIsExists > 0) {
-            return new Result(1, "路径名称已存在");
+        menuDTO.setMode(OperateMode.ADD.getMode());
+        Result result = validateData(menuDTO);
+        if (result.getCode() != 0) {
+            return result;
         }
 
         String msg = "添加成功";
@@ -172,12 +176,42 @@ public class MenuService {
         return new Result(1, "已经关闭");
     }
 
-    public Result getMenuInfo(Integer id) {
+    public Result<MenuVO> getMenuInfo(Integer id) {
         MenuListPO menuListPO = menuListDAO.selectByPrimaryKey(id);
         if (Objects.isNull(menuListPO)) {
             return new Result(1, "该侧边栏不存在");
         }
         MenuVO menuVO = MenuVO.fromPO(menuListPO);
         return new Result(0, "获取成功", menuVO);
+    }
+
+    public Result validateData(MenuDTO menuDTO) {
+        String mode = menuDTO.getMode();
+        Boolean dataValidate = false;
+        MenuListPO menuListPO;
+        if (OperateMode.UPDATE.equals(mode)) {
+            menuDTO.setMode("name");
+            menuListPO = menuListDAO.checkMenuIsExists(menuDTO);
+            if (!menuListPO.getId().equals(menuDTO.getId())) {
+                dataValidate = true;
+            }
+            menuDTO.setMode("path");
+            menuListPO = menuListDAO.checkMenuIsExists(menuDTO);
+            if (StringUtils.isNotEmpty(menuDTO.getPath()) && !menuListPO.getId().equals(menuDTO.getId())) {
+                dataValidate = true;
+            }
+        } else {
+            menuDTO.setMode("name");
+            menuListPO = menuListDAO.checkMenuIsExists(menuDTO);
+            if (Objects.nonNull(menuListPO)) {
+                dataValidate = true;
+            }
+            menuDTO.setMode("path");
+            menuListPO = menuListDAO.checkMenuIsExists(menuDTO);
+            if (StringUtils.isNotEmpty(menuDTO.getPath()) && Objects.nonNull(menuListPO)) {
+                dataValidate = true;
+            }
+        }
+        return new Result(!dataValidate ? 0 : 1, !dataValidate ? "不存在信息，可以添加" : "不可以添加");
     }
 }

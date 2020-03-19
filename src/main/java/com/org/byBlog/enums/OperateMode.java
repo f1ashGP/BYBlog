@@ -1,7 +1,7 @@
 package com.org.byBlog.enums;
 
 public enum OperateMode {
-    UPDATE(1, "update"), DELETE(2, "delete"),OPERATE_STATUS(3,"operateStatus");
+    UPDATE(1, "update"), DELETE(2, "delete"), OPERATE_STATUS(3, "operateStatus"), ADD(4, "add");
 
     private Integer id;
     private String mode;

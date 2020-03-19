@@ -17,7 +17,29 @@
     id, username, password, nickname, freeze, email, avatar, role, last_login_time, create_time
   </sql>
 
+  <sql id="Pagination">
+    <if test="offset != null and count != null and isPagination">
+      LIMIT #{offset}, #{count}
+    </if>
+  </sql>
+  <sql id="OrderBy">
+    <if test="order != null and sort != null">
+      ORDER BY ${order} ${sort}
+    </if>
+  </sql>
+
   <!-- liyi start -->
+  <sql id="User_Where_List">
+    <where>
+        role = 'normal'
+        <if test="name != null">
+          AND nickname LIKE "%"#{name}"%"
+        </if>
+        <if test="status != null">
+          AND freeze = #{status}
+        </if>
+    </where>
+  </sql>
   <select id="getUserByAccount" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
@@ -30,10 +52,21 @@
     FROM public_user
     WHERE username = #{account} AND nickname = #{nickname}
   </select>
+  <select id="getUserList" resultMap="BaseResultMap" parameterType="com.org.byBlog.pojo.dto.UserDTO">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM public_user
+    <include refid="User_Where_List"/>
+    ORDER BY create_time DESC
+    <include refid="Pagination"/>
+  </select>
+  <select id="getUserTotalCount" resultType="java.lang.Integer" parameterType="com.org.byBlog.pojo.dto.UserDTO">
+    SELECT COUNT(*) FROM public_user <include refid="User_Where_List"/>
+  </select>
   <!-- liyi end -->
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from public_user
     where id = #{id,jdbcType=BIGINT}
@@ -46,12 +79,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into public_user (username, password, nickname, 
-      freeze, email, avatar, 
+    insert into public_user (username, password, nickname,
+      freeze, email, avatar,
       role, last_login_time, create_time
       )
-    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{freeze,jdbcType=BIT}, #{email,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR},
+      #{freeze,jdbcType=BIT}, #{email,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR},
       #{role,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>

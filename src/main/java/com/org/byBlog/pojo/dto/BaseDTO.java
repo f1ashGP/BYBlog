@@ -23,6 +23,16 @@ public class BaseDTO {
 
     private Boolean isPagination = true;
 
+    private String mode;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
     public Boolean getPagination() {
         return isPagination;
     }

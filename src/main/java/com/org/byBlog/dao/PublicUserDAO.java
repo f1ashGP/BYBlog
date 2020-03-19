@@ -4,6 +4,8 @@ import com.org.byBlog.pojo.dto.UserDTO;
 import com.org.byBlog.pojo.po.PublicUserPO;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PublicUserDAO {
     int deleteByPrimaryKey(Long id);
@@ -21,4 +23,8 @@ public interface PublicUserDAO {
     PublicUserPO getUserByAccount(String account);
 
     PublicUserPO getUserByInfo(UserDTO userDTO);
+
+    List<PublicUserPO> getUserList(UserDTO userDTO);
+
+    Integer getUserTotalCount(UserDTO userDTO);
 }

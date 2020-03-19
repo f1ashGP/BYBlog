@@ -45,11 +45,25 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM role_access
+    <include refid="Role_List_Where" />
+    ORDER BY create_time DESC
     <include refid="Pagination" />
   </select>
   <select id="getRoleTotalCount" parameterType="com.org.byBlog.pojo.dto.RoleDTO" resultType="java.lang.Integer">
     SELECT COUNT(*) FROM role_access
     <include refid="Role_List_Where" />
+  </select>
+  <select id="checkMenuIsExists" parameterType="com.org.byBlog.pojo.dto.RoleDTO" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM role_access
+    <where>
+      <if test="mode == 'name'">
+        name = #{name}
+      </if>
+      <if test="mode == 'path'">
+        path = #{path}
+      </if>
+    </where>
+    LIMIT 1,1
   </select>
   <!-- liyi end -->
 

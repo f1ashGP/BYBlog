@@ -18,5 +18,7 @@ public class UserDTO extends BaseDTO{
     @NotNull(groups = UserGroup.Register.class, message = "昵称不能为空")
     private String nickname;
 
+    private Boolean status;
+
     private String email;
 }
